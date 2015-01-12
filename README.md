@@ -1,4 +1,23 @@
-multimon-ng a fork of multimon. It decodes the following digital transmission modes:
+# Cubehub fork
+This paragraph here summarizies what Cubehub has done differently.
+
+Currently this fork only exists because it seems that multimon-ng is quite picky about fsk9600 symbol rate. There is slight error in [demod](https://github.com/cubehub/demod) if input stream is converted to 22050 sps output stream. With this little error multimon-ng was unable to decode fsk9600 stream.
+
+Anyway branch [48k-demod-fsk9](https://github.com/cubehub/multimon-ng/tree/48k-demod-fsk96) adds 48000 sps input stream support to fsk9600.
+
+```
+git checkout https://github.com/cubehub/multimon-ng.git
+cd multimon-ng
+git checkout 48k-demod-fsk9
+mkdir build
+cd build
+qmake ../multimon-ng.pro
+make
+sudo make install
+```
+
+## multimon-ng
+It is a fork of multimon. It decodes the following digital transmission modes:
 
 - POCSAG512 POCSAG1200 POCSAG2400
 - EAS
@@ -10,6 +29,7 @@ multimon-ng a fork of multimon. It decodes the following digital transmission mo
 - EEA EIA CCIR
 - MORSE CW
 
+## Changes
 The following changes have been made so far:
 - Fixes for x64
 - Basic functionality on Mac OS X 'Lion' (Soundcard/OSS input is unsupported)
@@ -26,7 +46,8 @@ The following changes have been made so far:
 - Windows native audio and a VisualStudio/MSVC project file, contributed by bzzt_ploink
 - Now accepts raw samples as piped input
 
-In addition to the deprecated legacy Makefile there is also a file for qmake which is the preferred way of building multimon-ng. It's recommended to use qmake to generate the Makefile.
+## Install
+using qmake
 
 ```
 mkdir build
@@ -36,25 +57,21 @@ make
 sudo make install
 ```
 
-The installation prefix can be set by passing a 'PREFIX' parameter to qmake. e.g:
-```qmake multimon-ng.pro PREFIX=/usr/local```
+using cmake
 
-So far multimon-ng has been successfully built on OS X, Debian, Ubuntu and Windows.
-(On Windows using the Qt-MinGW build environment, as well as Cygwin and VisualStudio/MSVC)
+```
+mkdir build
+cd build
+cmake ../
+make
+make install
+```
 
+## How to convert files to multimon-ng format [1 channel, signed 16 bit integer, 22050 sps]
 Files can be easily converted into multimon-ng's native raw format using *sox*. e.g:
 ```sox -t wav pocsag_short.wav -esigned-integer -b16 -r 22050 -t raw pocsag_short.raw```
-GNURadio can also generate the format using the file sink in input mode *short*. 
 
-You can also "pipe" raw samples into multimon-ng using something like
+## Use cases
+You can also "pipe" raw samples into multimon-ng using something like this
 ```sox -t wav pocsag_short.wav -esigned-integer -b16 -r 22050 -t raw - | ./multimon-ng -```
 (note the trailing dash)
-
-Packaging
----------
-
-```
-qmake multimon-ng.pro PREFIX=/usr/local
-make
-make install INSTALL_ROOT=/
-```
