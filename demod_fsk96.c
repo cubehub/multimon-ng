@@ -1,7 +1,7 @@
 /*
  *      demod_fsk96.c -- FSK 9600 baud demodulator (G3RUH)
  *
- *      Copyright (C) 1996  
+ *      Copyright (C) 1996
  *          Thomas Sailer (sailer@ife.ee.ethz.ch, hb9jnx@hb9w.che.eu)
  *
  *      This program is free software; you can redistribute it and/or modify
@@ -28,7 +28,7 @@
 
 /* ---------------------------------------------------------------------- */
 
-#define FREQ_SAMP  22050
+#define FREQ_SAMP  48000
 #define BAUD       9600
 
 /* ---------------------------------------------------------------------- */
@@ -73,7 +73,7 @@ static const float inp_filt[3][24] = {
 #define SPHASEINC (0x10000u*BAUD/FREQ_SAMP/UPSAMP)
 
 /* ---------------------------------------------------------------------- */
-	
+
 static void fsk96_init(struct demod_state *s)
 {
 	hdlc_init(s);
