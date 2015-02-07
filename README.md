@@ -1,11 +1,11 @@
 # Cubehub fork
 This paragraph here summarizies what Cubehub has done differently.
 
-Currently this fork only exists because it seems that multimon-ng is quite picky about fsk9600 symbol rate. There is slight error in [demod](https://github.com/cubehub/demod) if input stream is converted to 22050 sps output stream. With this little error multimon-ng was unable to decode fsk9600 stream.
+Currently this fork only exists because it seems that multimon-ng is quite picky about fsk9600 symbol rate. There is slight error in [demod](https://github.com/andresv/demod) if input stream is converted to 22050 sps output stream. With this little error multimon-ng was unable to decode fsk9600 stream.
 
-Anyway branch [48k-demod-fsk9](https://github.com/cubehub/multimon-ng/tree/48k-demod-fsk96) adds 48000 sps input stream support to fsk9600.
+Anyway branch [48k-demod-fsk96](https://github.com/cubehub/multimon-ng/tree/48k-demod-fsk96) adds 48000 sps input stream support to fsk9600.
 
-More information about [demod](https://github.com/cubehub/demod) and multimon-ng hack can be read from [my blog](http://andres.svbtle.com/pipe-sdr-iq-data-through-fm-demodulator-for-fsk9600-ax25-reception).
+More information about [demod](https://github.com/andresv/demod) and multimon-ng hack can be read from [my blog](http://andres.svbtle.com/pipe-sdr-iq-data-through-fm-demodulator-for-fsk9600-ax25-reception).
 
 ```
 git checkout https://github.com/cubehub/multimon-ng.git
