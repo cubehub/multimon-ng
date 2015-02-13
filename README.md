@@ -10,7 +10,7 @@ More information about [demod](https://github.com/andresv/demod) and multimon-ng
 ```
 git clone https://github.com/cubehub/multimon-ng.git
 cd multimon-ng
-git checkout 48k-demod-fsk9
+git checkout 48k-demod-fsk96
 mkdir build
 cd build
 qmake ../multimon-ng.pro
