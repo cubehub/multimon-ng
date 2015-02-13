@@ -22,6 +22,7 @@
 /* ---------------------------------------------------------------------- */
 
 #include "multimon.h"
+#include <stdio.h>
 #include <string.h>
 
 /* ---------------------------------------------------------------------- */
@@ -178,42 +179,47 @@ static void ax25_disp_packet(struct demod_state *s, unsigned char *bp, unsigned 
                 bp += 7;
                 len -= 7;
         } else {
-                /*
-                 * normal header
-                 */
-                if (len < 15) 
-			return;
-		if (aprs_mode) {
-			aprs_disp_packet(bp, len);
-			return;
-		}
-                if ((bp[6] & 0x80) != (bp[13] & 0x80)) {
-                        v1 = 0;
-                        cmd = (bp[6] & 0x80);
-                }
-                verbprintf(0, "%s: fm ", s->dem_par->name);
-		for(i = 7; i < 13; i++) 
-                        if ((bp[i] &0xfe) != 0x40) 
-                                verbprintf(0, "%c",bp[i] >> 1);
-                verbprintf(0, "-%u to ",(bp[13] >> 1) & 0xf);
-                for(i = 0; i < 6; i++) 
-                        if ((bp[i] &0xfe) != 0x40) 
-                                verbprintf(0, "%c",bp[i] >> 1);
-                verbprintf(0, "-%u",(bp[6] >> 1) & 0xf);
-                bp += 14;
-                len -= 14;
-                if ((!(bp[-1] & 1)) && (len >= 7)) 
-			verbprintf(0, " via ");
-                while ((!(bp[-1] & 1)) && (len >= 7)) {
-                        for(i = 0; i < 6; i++) 
-                                if ((bp[i] &0xfe) != 0x40) 
-                                        verbprintf(0, "%c",bp[i] >> 1);
-                        verbprintf(0, "-%u",(bp[6] >> 1) & 0xf);
-                        bp += 7;
-                        len -= 7;
-                        if ((!(bp[-1] & 1)) && (len >= 7)) 
-                                verbprintf(0, ",");
-                }
+            /*
+             * normal header
+             */
+            if (len < 15) 
+                return;
+            
+            if (aprs_mode) {
+                aprs_disp_packet(bp, len);
+                return;
+            }
+            if ((bp[6] & 0x80) != (bp[13] & 0x80)) {
+                    v1 = 0;
+                    cmd = (bp[6] & 0x80);
+            }
+            verbprintf(0, "%s: fm ", s->dem_par->name);
+            
+            for(i = 7; i < 13; i++) {
+                if ((bp[i] &0xfe) != 0x40) 
+                    verbprintf(0, "%c",bp[i] >> 1);
+                
+            }
+            verbprintf(0, "-%u to ",(bp[13] >> 1) & 0xf);
+            for(i = 0; i < 6; i++) 
+                    if ((bp[i] &0xfe) != 0x40) 
+                            verbprintf(0, "%c",bp[i] >> 1);
+            verbprintf(0, "-%u",(bp[6] >> 1) & 0xf);
+            bp += 14;
+            len -= 14;
+            if ((!(bp[-1] & 1)) && (len >= 7)) 
+                verbprintf(0, " via ");
+            
+            while ((!(bp[-1] & 1)) && (len >= 7)) {
+                    for(i = 0; i < 6; i++) 
+                            if ((bp[i] &0xfe) != 0x40) 
+                                    verbprintf(0, "%c",bp[i] >> 1);
+                    verbprintf(0, "-%u",(bp[6] >> 1) & 0xf);
+                    bp += 7;
+                    len -= 7;
+                    if ((!(bp[-1] & 1)) && (len >= 7)) 
+                            verbprintf(0, ",");
+            }
         }
         if(!len) 
                 return;
@@ -279,11 +285,16 @@ static void ax25_disp_packet(struct demod_state *s, unsigned char *bp, unsigned 
         }
         verbprintf(0, " pid=%02X\n", *bp++);
         len--;
-        j = 0;
+        j = 1;
         while (len) {
                 i = *bp++;
-                if ((i >= 32) && (i < 128)) 
-                        verbprintf(0, "%c",i);
+                verbprintf(0, "%02X ", i);
+                
+                /*
+                if ((i >= 32) && (i < 128)) {
+                    //verbprintf(0, "%c",(i >> 1) & 0xf);
+                    verbprintf(0, "%c", i);
+                }
                 else if (i == 13) {
                         if (j) 
                                 verbprintf(0, "\n");
@@ -292,6 +303,7 @@ static void ax25_disp_packet(struct demod_state *s, unsigned char *bp, unsigned 
                         verbprintf(0, ".");
                 if (i >= 32) 
                         j = 1;
+                 */
                 len--;
         }
         if (j) 
@@ -312,8 +324,9 @@ void hdlc_rxbit(struct demod_state *s, int bit)
 	s->l2.hdlc.rxbitstream <<= 1;
 	s->l2.hdlc.rxbitstream |= !!bit;
 	if ((s->l2.hdlc.rxbitstream & 0xff) == 0x7e) {
-		if (s->l2.hdlc.rxstate && (s->l2.hdlc.rxptr - s->l2.hdlc.rxbuf) > 2)
+		if (s->l2.hdlc.rxstate && (s->l2.hdlc.rxptr - s->l2.hdlc.rxbuf) > 2) {
 			ax25_disp_packet(s, s->l2.hdlc.rxbuf, s->l2.hdlc.rxptr - s->l2.hdlc.rxbuf);
+		}
 		s->l2.hdlc.rxstate = 1;
 		s->l2.hdlc.rxptr = s->l2.hdlc.rxbuf;
 		s->l2.hdlc.rxbitbuf = 0x80;
