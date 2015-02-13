@@ -8,7 +8,7 @@ Anyway branch [48k-demod-fsk96](https://github.com/cubehub/multimon-ng/tree/48k-
 More information about [demod](https://github.com/andresv/demod) and multimon-ng hack can be read from [my blog](http://andres.svbtle.com/pipe-sdr-iq-data-through-fm-demodulator-for-fsk9600-ax25-reception).
 
 ```
-git checkout https://github.com/cubehub/multimon-ng.git
+git clone https://github.com/cubehub/multimon-ng.git
 cd multimon-ng
 git checkout 48k-demod-fsk9
 mkdir build
